@@ -1,0 +1,8 @@
+app:
+    name: Trabajo
+server:
+    contextPath: /monitorizacion
+url.indexado: http://localhost:9200/nuevo/medicion
+url.busqueda: http://localhost:9200/nuevo/medicion/_search
+url.busqueda.medida: http://localhost:9200/nuevo/medicion/
+url.indice: http://localhost:9200/nuevo

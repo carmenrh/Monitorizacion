@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+  <mapping>
+    <class-a>trabajo.master.dto.ModeloDto</class-a>
+    <class-b>trabajo.master.vo.ModeloVo</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>trabajo.master.dto.GeoPointDto</class-a>
+    <class-b>trabajo.master.vo.GeoPointVo</class-b>
+  </mapping>
+
+</mappings>
