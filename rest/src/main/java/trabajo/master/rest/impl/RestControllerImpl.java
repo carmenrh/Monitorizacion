@@ -75,12 +75,12 @@ public class RestControllerImpl implements Controller {
    * Buscar Mediciones.
    *
    * @return the string
-   * @throws JsonProcessingException
-   *           the json processing exception
+   * @throws JsonProcessingException           the json processing exception
+   * @throws NotValidDataException the not valid data exception
    * @see trabajo.master.rest.Controller#buscarMediciones()
    */
   @RequestMapping(path = "", method = RequestMethod.GET)
-  public String buscarMediciones() throws JsonProcessingException {
+  public String buscarMediciones() throws JsonProcessingException, NotValidDataException {
     return servicio.buscarMediciones();
   }
 

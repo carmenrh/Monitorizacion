@@ -30,10 +30,10 @@ public interface Servicio {
    * Buscar mediciones.
    *
    * @return the string
-   * @throws JsonProcessingException
-   *           the json processing exception
+   * @throws JsonProcessingException           the json processing exception
+   * @throws NotValidDataException the not valid data exception
    */
-  String buscarMediciones() throws JsonProcessingException;
+  String buscarMediciones() throws JsonProcessingException, NotValidDataException;
 
   /**
    * Buscar medida.

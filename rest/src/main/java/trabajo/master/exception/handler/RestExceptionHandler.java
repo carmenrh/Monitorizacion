@@ -1,6 +1,5 @@
 package trabajo.master.exception.handler;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +10,7 @@ import trabajo.master.dto.ErrorResponseDto;
 import trabajo.master.exception.NotValidCordinateException;
 import trabajo.master.exception.NotValidDataException;
 import trabajo.master.exception.NotValidNumberException;
+import trabajo.master.utils.Constantes;
 
 /**
  * Handler para tratar las excepciones lanzadas por los servicios REST.
@@ -33,8 +33,8 @@ public class RestExceptionHandler {
   @ResponseBody
   public ErrorResponseDto handleRuntimeException(RuntimeException exception) {
 
-    return new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-        "Internal Server Error", exception.getMessage());
+    return new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
+        exception.getMessage(), null);
 
   }
 
@@ -50,11 +50,11 @@ public class RestExceptionHandler {
   @ResponseBody
   public ErrorResponseDto handleNotValidDataException(NotValidDataException exception) {
 
-    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), "Not Found Error",
-        exception.getMessage());
+    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), Constantes.BAD_FORMAT,
+        exception.getMessage(), exception.getErrors());
 
   }
-  
+
   /**
    * Gestiona los errores lanzados como NotValidCordinateException.
    *
@@ -67,12 +67,11 @@ public class RestExceptionHandler {
   @ResponseBody
   public ErrorResponseDto handleNotValidCordinateException(NotValidCordinateException exception) {
 
-    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), "Bad Request Error",
-        exception.getMessage());
+    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), Constantes.BAD_FORMAT,
+        exception.getMessage(), exception.getErrors());
 
   }
-  
-  
+
   /**
    * Gestiona los errores lanzados como NotValidCordinateException.
    *
@@ -83,10 +82,10 @@ public class RestExceptionHandler {
   @ExceptionHandler(NotValidNumberException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
-  public ErrorResponseDto handleNotValidNumberException(NotFoundException exception) {
+  public ErrorResponseDto handleNotValidNumberException(NotValidNumberException exception) {
 
-    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), "Bad Format Error",
-        exception.getMessage());
+    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), Constantes.BAD_FORMAT,
+        exception.getMessage(), exception.getErrors());
 
   }
 }

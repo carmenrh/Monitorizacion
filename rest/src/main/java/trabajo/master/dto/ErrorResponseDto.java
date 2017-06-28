@@ -1,5 +1,7 @@
 package trabajo.master.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -13,32 +15,42 @@ public class ErrorResponseDto {
 
   /** The status. */
   private int status;
-  
+
   /** The message. */
   private String message;
-  
+
   /** The description. */
   private String description;
 
+  /** The errors. */
+  protected List<ErrorDetails> errors;
+
   /**
-   * Constructor por defecto.
+   * Instantiates a new error response dto.
    */
   public ErrorResponseDto() {
 
   }
 
   /**
-   * Constructor con parametros.
+   * Instantiates a new error response dto.
    *
-   * @param status the status
-   * @param message the message
-   * @param description the description
+   * @param status
+   *          the status
+   * @param message
+   *          the message
+   * @param description
+   *          the description
+   * @param errors
+   *          the errors
    */
-  public ErrorResponseDto(int status, String message, String description) {
+  public ErrorResponseDto(int status, String message, String description,
+      List<ErrorDetails> errors) {
 
     this.status = status;
     this.message = message;
     this.description = description;
+    this.errors = errors;
 
   }
 }
