@@ -3,8 +3,8 @@ package trabajo.master.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import trabajo.master.dto.ModeloDto;
+import trabajo.master.exception.NotFoundException;
 import trabajo.master.exception.NotValidDataException;
-import trabajo.master.exception.NotValidNumberException;
 
 /**
  * The Interface Controller.
@@ -24,20 +24,22 @@ public interface Controller {
    *           the not valid data exception
    * @throws JsonProcessingException
    *           the json processing exception
-   * @throws NotValidNumberException
-   *           the not valid number exception
    */
-  String registrarMedicion(ModeloDto modelo)
-      throws NotValidDataException, JsonProcessingException, NotValidNumberException;
+  String registrarMedicion(ModeloDto modelo) throws NotValidDataException, JsonProcessingException;
 
   /**
    * Buscar mediciones.
    *
    * @return the string
-   * @throws JsonProcessingException           the json processing exception
-   * @throws NotValidDataException the not valid data exception
+   * @throws JsonProcessingException
+   *           the json processing exception
+   * @throws NotValidDataException
+   *           the not valid data exception
+   * @throws NotFoundException
+   *           the not found exception
    */
-  String buscarMediciones() throws JsonProcessingException, NotValidDataException;
+  String buscarMediciones()
+      throws JsonProcessingException, NotValidDataException, NotFoundException;
 
   /**
    * Buscar medicion.
@@ -49,8 +51,10 @@ public interface Controller {
    *           the json processing exception
    * @throws NotValidDataException
    *           the not valid data exception
+   * @throws NotFoundException
+   *           the not found exception
    */
   String buscarMedicion(String indice)
-      throws JsonProcessingException, NotValidDataException;
+      throws JsonProcessingException, NotValidDataException, NotFoundException;
 
 }

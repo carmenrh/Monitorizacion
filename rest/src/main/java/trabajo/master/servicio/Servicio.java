@@ -2,8 +2,8 @@ package trabajo.master.servicio;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import trabajo.master.exception.NotFoundException;
 import trabajo.master.exception.NotValidDataException;
-import trabajo.master.exception.NotValidNumberException;
 import trabajo.master.vo.ModeloVo;
 
 /**
@@ -17,33 +17,44 @@ public interface Servicio {
   /**
    * Indexar medida.
    *
-   * @param modelo          the modelo
+   * @param modelo
+   *          the modelo
    * @return the string
-   * @throws NotValidDataException           the not valid data exception
-   * @throws JsonProcessingException the json processing exception
-   * @throws NotValidNumberException the not valid number exception
+   * @throws NotValidDataException
+   *           the not valid data exception
+   * @throws JsonProcessingException
+   *           the json processing exception
    */
-  String indexarMedida(ModeloVo modelo)
-      throws NotValidDataException, JsonProcessingException, NotValidNumberException;
+  String indexarMedida(ModeloVo modelo) throws NotValidDataException, JsonProcessingException;
 
   /**
    * Buscar mediciones.
    *
    * @return the string
-   * @throws JsonProcessingException           the json processing exception
-   * @throws NotValidDataException the not valid data exception
+   * @throws JsonProcessingException
+   *           the json processing exception
+   * @throws NotValidDataException
+   *           the not valid data exception
+   * @throws NotFoundException
+   *           the not found exception
    */
-  String buscarMediciones() throws JsonProcessingException, NotValidDataException;
+  String buscarMediciones()
+      throws JsonProcessingException, NotValidDataException, NotFoundException;
 
   /**
    * Buscar medida.
    *
-   * @param indice          the indice
+   * @param indice
+   *          the indice
    * @return the string
-   * @throws JsonProcessingException           the json processing exception
-   * @throws NotValidDataException the not valid data exception
+   * @throws JsonProcessingException
+   *           the json processing exception
+   * @throws NotValidDataException
+   *           the not valid data exception
+   * @throws NotFoundException
+   *           the not found exception
    */
   String buscarMedicion(String indice)
-      throws JsonProcessingException, NotValidDataException;
+      throws JsonProcessingException, NotValidDataException, NotFoundException;
 
 }

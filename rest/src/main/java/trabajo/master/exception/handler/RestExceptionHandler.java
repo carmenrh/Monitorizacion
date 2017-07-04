@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import trabajo.master.dto.ErrorResponseDto;
-import trabajo.master.exception.NotValidCordinateException;
+import trabajo.master.exception.NotFoundException;
 import trabajo.master.exception.NotValidDataException;
-import trabajo.master.exception.NotValidNumberException;
 import trabajo.master.utils.Constantes;
 
 /**
@@ -56,36 +55,19 @@ public class RestExceptionHandler {
   }
 
   /**
-   * Gestiona los errores lanzados como NotValidCordinateException.
+   * Gestiona los errores lanzados como NotFoundException.
    *
-   * @param exception
-   *          the exception
+   * @param exception the exception
    * @return the error response dto
    */
-  @ExceptionHandler(NotValidCordinateException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(NotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   @ResponseBody
-  public ErrorResponseDto handleNotValidCordinateException(NotValidCordinateException exception) {
+  public ErrorResponseDto handleNotFoundException(NotFoundException exception) {
 
-    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), Constantes.BAD_FORMAT,
-        exception.getMessage(), exception.getErrors());
+    return new ErrorResponseDto(HttpStatus.NOT_FOUND.value(), Constantes.NOT_FOUND,
+        exception.getMessage());
 
   }
 
-  /**
-   * Gestiona los errores lanzados como NotValidCordinateException.
-   *
-   * @param exception
-   *          the exception
-   * @return the error response dto
-   */
-  @ExceptionHandler(NotValidNumberException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
-  public ErrorResponseDto handleNotValidNumberException(NotValidNumberException exception) {
-
-    return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), Constantes.BAD_FORMAT,
-        exception.getMessage(), exception.getErrors());
-
-  }
 }

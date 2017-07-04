@@ -46,11 +46,24 @@ public class ErrorResponseDto {
    */
   public ErrorResponseDto(int status, String message, String description,
       List<ErrorDetails> errors) {
-
     this.status = status;
     this.message = message;
     this.description = description;
     this.errors = errors;
+
+  }
+
+  /**
+   * Instantiates a new error response dto.
+   *
+   * @param status the status
+   * @param message the message
+   * @param description the description
+   */
+  public ErrorResponseDto(int status, String message, String description) {
+    this.status = status;
+    this.message = message;
+    this.description = description;
 
   }
 }

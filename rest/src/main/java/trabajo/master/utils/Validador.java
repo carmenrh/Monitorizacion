@@ -3,7 +3,13 @@ package trabajo.master.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang.StringUtils;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import org.springframework.stereotype.Component;
 
 import trabajo.master.dto.ErrorDetails;
@@ -17,10 +23,11 @@ import trabajo.master.vo.ModeloVo;
  * @version 1.0
  */
 @Component
+@Slf4j
 public class Validador {
 
   /**
-   * Valida obligatorio.
+   * Valida obligatorio, comprueba si el dato introducido es nulo o vacio.
    *
    * @param dato
    *          the dato
@@ -31,14 +38,15 @@ public class Validador {
   }
 
   /**
-   * Valida coordenadas.
+   * Valida coordenadas, comprueba que las coordenadas estén escritas con puntos
+   * y no con comas.
    *
    * @param ubicacion
    *          the ubicacion,
    * @return true, if successful
    */
   private boolean validaCoordenadas(GeoPointVo ubicacion) {
-    return (ubicacion.getLat().contains(",") || ubicacion.getLon().contains(",")); 
+    return (ubicacion.getLat().contains(",") || ubicacion.getLon().contains(","));
   }
 
   /**
@@ -67,7 +75,8 @@ public class Validador {
       listaErrores.add(new ErrorDetails(Constantes.LOCALIDAD, Constantes.CAMPO_OBLIGATORIO));
     }
     if (!validaNumero(modelo.getValorActual())) {
-      listaErrores.add(new ErrorDetails(Constantes.VALOR_ACTUAL, Constantes.NO_REAL));
+      listaErrores.add(new ErrorDetails(Constantes.VALOR_ACTUAL + ": " + modelo.getValorActual(),
+          Constantes.NO_REAL));
     }
     if (!validaObligatorio(modelo.getUbicacion().getLat())) {
       listaErrores.add(new ErrorDetails(Constantes.LATITUD, Constantes.CAMPO_OBLIGATORIO));
@@ -81,11 +90,15 @@ public class Validador {
     if (validaCoordenadas(modelo.getUbicacion())) {
       listaErrores.add(new ErrorDetails(Constantes.UBICACION, Constantes.PUNTOS_NO_COMAS));
     }
+    if (!validaFecha(modelo.getFechaMedida())) {
+      listaErrores.add(new ErrorDetails(Constantes.FECHA_MEDIDA + ": " + modelo.getFechaMedida(),
+          Constantes.BAD_FORMAT_FECHA));
+    }
     return listaErrores;
   }
 
   /**
-   * Valida numero.
+   * Valida numero, comprueba si el dato introducido es un número real.
    *
    * @param numero
    *          the numero
@@ -95,11 +108,32 @@ public class Validador {
    */
   private boolean validaNumero(String numero) {
     try {
-      Double.parseDouble(numero);
+      Float.parseFloat(numero);
       return true;
     } catch (NumberFormatException e) {
       return false;
     }
+  }
+
+  /**
+   * Valida si la fecha cumple el patrón "yyyy-mm-dd'T'hh:mm:ssZ".
+   *
+   * @param fecha
+   *          the fecha
+   * @return true, if successful
+   */
+  private boolean validaFecha(String fecha) {
+    try {
+      DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-mm-dd'T'hh:mm:ssZ");
+      dtf.parseDateTime(fecha);
+    } catch (UnsupportedOperationException e) {
+      log.debug(Constantes.FECHA_MEDIDA + ": " + fecha + Constantes.BAD_FORMAT_FECHA);
+      return false;
+    } catch (IllegalArgumentException e) {
+      log.debug(Constantes.FECHA_MEDIDA + ": " + fecha + Constantes.BAD_FORMAT_FECHA);
+      return false;
+    }
+    return true;
   }
 
 }

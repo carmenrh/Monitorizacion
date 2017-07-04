@@ -21,8 +21,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import trabajo.master.dto.ErrorDetails;
+import trabajo.master.exception.NotFoundException;
 import trabajo.master.exception.NotValidDataException;
-
 import trabajo.master.servicio.Servicio;
 import trabajo.master.utils.Validador;
 import trabajo.master.vo.ModeloVo;
@@ -30,14 +30,13 @@ import trabajo.master.vo.RespuestaBusquedaTodasVo;
 import trabajo.master.vo.RespuestaBusquedaVo;
 import trabajo.master.vo.RespuestaIndexadoVo;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ServiceImpl.
  * 
  * @author Carmen Roberto Herrero
  * @version 1.0
  */
-
-/** The Constant log. */
 @Slf4j
 @Service
 public class ServicioImpl implements Servicio {
@@ -45,6 +44,7 @@ public class ServicioImpl implements Servicio {
   /** The template. */
   private RestTemplate template;
 
+  /** The validate. */
   private Validador validate;
 
   /** The url indexado. */
@@ -70,6 +70,8 @@ public class ServicioImpl implements Servicio {
    *
    * @param template
    *          the template
+   * @param validate
+   *          the validate
    */
   @Autowired
   public ServicioImpl(RestTemplate template, Validador validate) {
@@ -127,17 +129,22 @@ public class ServicioImpl implements Servicio {
    *           the json processing exception
    * @throws NotValidDataException
    *           the not valid data exception
+   * @throws NotFoundException
+   *           the not found exception
    * @see trabajo.master.servicio.Servicio#buscarMedicion(java.lang.String)
    */
   public String buscarMedicion(String indice)
-      throws JsonProcessingException, NotValidDataException {
+      throws JsonProcessingException, NotValidDataException, NotFoundException {
     String urlMedida = "";
 
     urlMedida = urlBusquedaMedida + indice;
 
+    HttpHeaders headers = creacionCabeceras();
+    HttpEntity<?> entity = new HttpEntity<Object>(headers);
+
     try {
-      ResponseEntity<RespuestaBusquedaVo> result = template.getForEntity(urlMedida,
-          RespuestaBusquedaVo.class);
+      ResponseEntity<RespuestaBusquedaVo> result = template.exchange(urlMedida, HttpMethod.GET,
+          entity, RespuestaBusquedaVo.class);
 
       if (result != null) {
         ObjectMapper mapper = new ObjectMapper();
@@ -146,12 +153,13 @@ public class ServicioImpl implements Servicio {
         log.debug(resultadoJson);
         return resultadoJson;
       } else {
-        throw new NotValidDataException("No hay datos para la medición " + indice);
+        log.error("No hay datos para la medición " + indice);
+        throw new NotFoundException("No hay datos para la medición " + indice);
       }
 
     } catch (RestClientException e) {
       urlMedida = "";
-      log.error(e.getMessage());
+      log.error("Error al buscar medición. " + e.getMessage());
       throw new NotValidDataException("Error al buscar medición");
     }
 
@@ -165,9 +173,12 @@ public class ServicioImpl implements Servicio {
    *           the json processing exception
    * @throws NotValidDataException
    *           the not valid data exception
+   * @throws NotFoundException
+   *           the not found exception
    * @see trabajo.master.servicio.Servicio#buscarMediciones()
    */
-  public String buscarMediciones() throws JsonProcessingException, NotValidDataException {
+  public String buscarMediciones()
+      throws JsonProcessingException, NotValidDataException, NotFoundException {
     try {
       ResponseEntity<RespuestaBusquedaTodasVo> result = template.getForEntity(urlBusqueda,
           RespuestaBusquedaTodasVo.class);
@@ -179,16 +190,18 @@ public class ServicioImpl implements Servicio {
         log.debug(resultadoJson);
         return resultadoJson;
       } else {
-        throw new NotValidDataException("No hay datos para recuperar");
+        log.error("No hay datos para recuperar");
+        throw new NotFoundException("No hay datos para recuperar");
       }
     } catch (RestClientException e) {
-      log.error(e.getMessage());
+      log.error("Error al buscar mediciones." + e.getMessage());
       throw new NotValidDataException("Error al buscar mediciones");
     }
   }
 
   /**
-   * Creacion cabeceras.
+   * Creacion cabeceras, añade a las cabeceras http el contenttype y la
+   * autenticación de la aplicación.
    *
    * @return the http headers
    */
