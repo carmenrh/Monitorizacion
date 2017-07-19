@@ -54,7 +54,9 @@ public class RestControllerImpl implements Controller {
   }
 
   /**
-   * Registrar medicion.
+   * Registrar medición, para ello indexa el dato en ElasticSearch tras
+   * comprobar la validez de los datos introducidos y lanza excepciones si no
+   * fuesen válidos.
    *
    * @param modelo
    *          the modelo
@@ -77,7 +79,9 @@ public class RestControllerImpl implements Controller {
   }
 
   /**
-   * Buscar Mediciones.
+   * Buscar Mediciones, busca todas las mediciones registradas en ElasticSearch
+   * en el índice indicado, si no hubiese datos o fallase el proceso lanza
+   * excepción.
    *
    * @return the string
    * @throws JsonProcessingException
@@ -88,14 +92,16 @@ public class RestControllerImpl implements Controller {
    *           the not found exception
    * @see trabajo.master.rest.Controller#buscarMediciones()
    */
-  @RequestMapping(path = "", method = RequestMethod.GET)
+  @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
   public String buscarMediciones()
       throws JsonProcessingException, NotValidDataException, NotFoundException {
     return servicio.buscarMediciones();
   }
 
   /**
-   * Buscar Medición.
+   * Buscar Medición, busca una medición en concreto a través del id de la misma,
+   *  dicho parámetro es requerido. Si no encuentra el dato pedido se lanzará excepción,
+   *  pero en caso afirmativo se devuelve la medición en formato JSON.
    *
    * @param indice
    *          the indice
@@ -108,7 +114,8 @@ public class RestControllerImpl implements Controller {
    *           the not found exception
    * @see trabajo.master.rest.Controller#buscarMedicion(java.lang.String)
    */
-  @RequestMapping(path = "/api/medicion", method = RequestMethod.POST)
+  @RequestMapping(path = "/api/medicion", method = RequestMethod.POST,
+      produces = "application/json")
   public String buscarMedicion(@RequestBody(required = true) String indice)
       throws JsonProcessingException, NotValidDataException, NotFoundException {
     return servicio.buscarMedicion(indice);

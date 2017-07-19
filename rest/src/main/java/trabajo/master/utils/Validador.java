@@ -38,15 +38,14 @@ public class Validador {
   }
 
   /**
-   * Valida coordenadas, comprueba que las coordenadas estén escritas con puntos
-   * y no con comas.
+   * Valida coordenadas, comprueba que las coordenadas estén escritas con puntos.
    *
    * @param ubicacion
    *          the ubicacion,
    * @return true, if successful
    */
   private boolean validaCoordenadas(GeoPointVo ubicacion) {
-    return (ubicacion.getLat().contains(",") || ubicacion.getLon().contains(","));
+    return (ubicacion.getLat().contains(".") && ubicacion.getLon().contains("."));
   }
 
   /**
@@ -87,7 +86,7 @@ public class Validador {
     if (!validaObligatorio(modelo.getFechaMedida())) {
       listaErrores.add(new ErrorDetails(Constantes.FECHA_MEDIDA, Constantes.CAMPO_OBLIGATORIO));
     }
-    if (validaCoordenadas(modelo.getUbicacion())) {
+    if (!validaCoordenadas(modelo.getUbicacion())) {
       listaErrores.add(new ErrorDetails(Constantes.UBICACION, Constantes.PUNTOS_NO_COMAS));
     }
     if (!validaFecha(modelo.getFechaMedida())) {
@@ -116,7 +115,7 @@ public class Validador {
   }
 
   /**
-   * Valida si la fecha cumple el patrón "yyyy-mm-dd'T'hh:mm:ssZ".
+   * Valida si la fecha cumple el patrón "yyyy-mm-dd'T'hh:mm:ss.SSSZ".
    *
    * @param fecha
    *          the fecha
@@ -124,7 +123,7 @@ public class Validador {
    */
   private boolean validaFecha(String fecha) {
     try {
-      DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-mm-dd'T'hh:mm:ssZ");
+      DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-mm-dd'T'HH:mm:ss.SSSZ");
       dtf.parseDateTime(fecha);
     } catch (UnsupportedOperationException e) {
       log.debug(Constantes.FECHA_MEDIDA + ": " + fecha + Constantes.BAD_FORMAT_FECHA);

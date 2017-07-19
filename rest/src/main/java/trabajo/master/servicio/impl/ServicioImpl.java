@@ -30,7 +30,6 @@ import trabajo.master.vo.RespuestaBusquedaTodasVo;
 import trabajo.master.vo.RespuestaBusquedaVo;
 import trabajo.master.vo.RespuestaIndexadoVo;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ServiceImpl.
  * 
@@ -80,7 +79,8 @@ public class ServicioImpl implements Servicio {
   }
 
   /**
-   * (non-Javadoc).
+   * Indexar medición en ElasticSearch si se cumplen las restriciones respecto a
+   * los datos introducidos.
    *
    * @param modelo
    *          the modelo
@@ -179,9 +179,13 @@ public class ServicioImpl implements Servicio {
    */
   public String buscarMediciones()
       throws JsonProcessingException, NotValidDataException, NotFoundException {
+    
+    HttpHeaders headers = creacionCabeceras();
+    HttpEntity<?> entity = new HttpEntity<Object>(headers);
+    
     try {
-      ResponseEntity<RespuestaBusquedaTodasVo> result = template.getForEntity(urlBusqueda,
-          RespuestaBusquedaTodasVo.class);
+      ResponseEntity<RespuestaBusquedaTodasVo> result = template.exchange(urlBusqueda,
+          HttpMethod.GET, entity, RespuestaBusquedaTodasVo.class);
 
       if (result != null) {
         ObjectMapper mapper = new ObjectMapper();
